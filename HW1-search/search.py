@@ -92,24 +92,25 @@ def depthFirstSearch(problem):
     print("Start:", problem.getStartState())
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
-    
-    #instantiate frontier and visited set
-    frontier = Stack() #fix stack instantiation
-    frontier.push(problem.getStartState()) 
+
+    # instantiate frontier and visited set
+    frontier = util.Stack()
+    frontier.push(problem.getStartState())
     visited = set(problem.getStartState())
-    
-    #begin DFS
-    while not frontier.isEmpty(): 
-        if problem.isGoalState(problem):
+    currCost = 0
+    # begin DFS
+    while not frontier.isEmpty():
+        currState = frontier.pop()  # returns the current coordinates of pacman
+        if problem.isGoalState(currState):
             return visited
-        visited.append(problem) #how do we get/update problem state?
-        for item in problem.getSuccessors(problem):
+        visited.add(problem)
+        # doesn't access just location
+        for item in problem.getSuccessors(currState):
             if item not in visited:
                 frontier.push(item)
-        #when to pop from frontier
-    
-    
-    print("Finished?", problem.isGoalState(problem)) #checks current state
+        # when to pop from frontier
+
+    print("Finished?", problem.isGoalState(currState))  # checks current state
     util.raiseNotDefined()
 
 
