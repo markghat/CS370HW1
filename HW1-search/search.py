@@ -120,6 +120,25 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+    frontier = util.Queue()
+    frontier.push((problem.getStartState(), []))
+    visited = set()
+    while not frontier.isEmpty():
+        # returns the current coordinates and accumulated path of pacman
+        currState, currPath = frontier.pop()
+        print("State: ", currState)
+        print("Path: ", currPath)
+        if problem.isGoalState(currState):
+            print("Finished?", problem.isGoalState(
+                currState))  # checks current state
+            return currPath
+        visited.add(currState)
+        for item, move, _ in problem.getSuccessors(currState):
+            if item not in visited:  # avoids circular path
+                nextMove = currPath+[move]
+                # update curr state & accumulated path
+                frontier.push((item, nextMove))
+
     util.raiseNotDefined()
 
 
