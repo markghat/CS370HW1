@@ -95,22 +95,25 @@ def depthFirstSearch(problem):
 
     # instantiate frontier and visited set
     frontier = util.Stack()
-    frontier.push(problem.getStartState())
-    visited = set(problem.getStartState())
-    currCost = 0
+    frontier.push((problem.getStartState(), []))
+    visited = set()
     # begin DFS
     while not frontier.isEmpty():
-        currState = frontier.pop()  # returns the current coordinates of pacman
+        # returns the current coordinates and accumulated path of pacman
+        currState, currPath = frontier.pop()
+        print("State: ", currState)
+        print("Path: ", currPath)
         if problem.isGoalState(currState):
-            return visited
-        visited.add(problem)
-        # doesn't access just location
-        for item in problem.getSuccessors(currState):
-            if item not in visited:
-                frontier.push(item)
-        # when to pop from frontier
+            print("Finished?", problem.isGoalState(
+                currState))  # checks current state
+            return currPath
+        visited.add(currState)
+        for item, move, _ in problem.getSuccessors(currState):
+            if item not in visited:  # avoids circular path
+                nextMove = currPath+[move]
+                # update curr state & accumulated path
+                frontier.push((item, nextMove))
 
-    print("Finished?", problem.isGoalState(currState))  # checks current state
     util.raiseNotDefined()
 
 
