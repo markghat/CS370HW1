@@ -146,11 +146,12 @@ def uniformCostSearch(problem):  # still need to update with priority
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
     frontier = util.PriorityQueue()
-    frontier.push((problem.getStartState(), []))
+    # intialized with cumulative cost and cost of next step
+    frontier.push((problem.getStartState(), [], 0), 0)
     visited = set()
     while not frontier.isEmpty():
         # returns the current coordinates and accumulated path of pacman
-        currState, currPath = frontier.pop()
+        currState, currPath, currCost = frontier.pop()
         print("State: ", currState)
         print("Path: ", currPath)
         if problem.isGoalState(currState):
@@ -158,13 +159,13 @@ def uniformCostSearch(problem):  # still need to update with priority
                 currState))  # checks current state
             return currPath
         visited.add(currState)
-        for item, move, _ in problem.getSuccessors(currState):
+        for item, move, stepCost in problem.getSuccessors(currState):
             if item not in visited:  # avoids circular path
                 nextMove = currPath+[move]
+                nextCost = currCost + stepCost
                 # update curr state & accumulated path
-                frontier.push((item, nextMove))
+                frontier.push((item, nextMove, nextCost), nextCost)
 
-    util.raiseNotDefined()
     util.raiseNotDefined()
 
 
