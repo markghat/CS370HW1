@@ -174,6 +174,27 @@ def nullHeuristic(state, problem=None):
     A heuristic function estimates the cost from the current state to the nearest
     goal in the provided SearchProblem.  This heuristic is trivial.
     """
+    PQueue = util.PriorityQueue()
+    frontier = util.PriorityQueueWithFunction(PQueue)
+    # intialized with cumulative cost and cost of next step
+    frontier.push((problem.getStartState(), [], 0), 0)
+    visited = set()
+    while not frontier.isEmpty():
+        # returns the current coordinates and accumulated path of pacman
+        currState, currPath, currCost = frontier.pop()
+        print("State: ", currState)
+        print("Path: ", currPath)
+        if problem.isGoalState(currState):
+            print("Finished?", problem.isGoalState(
+                currState))  # checks current state
+            return currPath
+        visited.add(currState)
+        for item, move, stepCost in problem.getSuccessors(currState):
+            if item not in visited:  # avoids circular path
+                nextMove = currPath+[move]
+                nextCost = currCost + stepCost
+                # update curr state & accumulated path
+                frontier.push((item, nextMove, nextCost), nextCost)
     return 0
 
 
