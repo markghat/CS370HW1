@@ -409,7 +409,17 @@ def cornersHeuristic(state, problem):
     walls = problem.walls
 
     "*** YOUR CODE HERE ***"
-    return 0  # Default to trivial solution
+    xy = state[0]
+    h = 0
+    corners = list(corners).copy()
+    while corners:
+        dist, corner = min(
+            [(util.manhattanDistance(xy, corner), corner) for corner in corners])
+        xy = corner
+        h += dist
+        corners.remove(xy)
+        return h
+    return 0
 
 
 class AStarCornersAgent(SearchAgent):
