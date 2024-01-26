@@ -4,7 +4,7 @@
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-#
+# 
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -18,7 +18,6 @@ Pacman agents (in searchAgents.py).
 """
 
 import util
-
 
 class SearchProblem:
     """
@@ -71,8 +70,7 @@ def tinyMazeSearch(problem):
     from game import Directions
     s = Directions.SOUTH
     w = Directions.WEST
-    return [s, s, w, s, w, w, s, w]
-
+    return  [s, s, w, s, w, w, s, w]
 
 def depthFirstSearch(problem):
     """
@@ -89,119 +87,98 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
-
-    # instantiate frontier and visited set
     frontier = util.Stack()
-    frontier.push((problem.getStartState(), []))
+    start = problem.getStartState()
+    frontier.push((start, []))
     visited = set()
     # begin DFS
     while not frontier.isEmpty():
-        # returns the current coordinates and accumulated path of pacman
         currState, currPath = frontier.pop()
-        print("State: ", currState)
-        print("Path: ", currPath)
+
         if problem.isGoalState(currState):
-            print("Finished?", problem.isGoalState(
-                currState))  # checks current state
             return currPath
-        visited.add(currState)
-        for item, move, _ in problem.getSuccessors(currState):
-            if item not in visited:  # avoids circular path
-                nextMove = currPath+[move]
-                # update curr state & accumulated path
-                frontier.push((item, nextMove))
-
-    util.raiseNotDefined()
-
+        
+        if currState not in visited:
+            visited.add(currState)
+            children = problem.getSuccessors(currState)
+            for next, move, _ in children:
+                if next not in visited:
+                    nextMove = currPath +[move]
+                    frontier.push((next, nextMove))
+    return None
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
     frontier = util.Queue()
-    frontier.push((problem.getStartState(), []))
-    visited = set()
+    start = problem.getStartState()
+    frontier.push((start, []))
+    visited = []
     while not frontier.isEmpty():
-        # returns the current coordinates and accumulated path of pacman
         currState, currPath = frontier.pop()
-        print("State: ", currState)
-        print("Path: ", currPath)
+
         if problem.isGoalState(currState):
-            print("Finished?", problem.isGoalState(
-                currState))  # checks current state
             return currPath
-        visited.add(currState)
-        for item, move, _ in problem.getSuccessors(currState):
-            if item not in visited:  # avoids circular path
-                nextMove = currPath+[move]
-                # update curr state & accumulated path
-                frontier.push((item, nextMove))
+        
+        if currState not in visited:
+            visited.append(currState)
+            children = problem.getSuccessors(currState)
+            for next, move, _ in children:
+                if next not in visited:
+                    nextMove = currPath +[move]
+                    frontier.push((next, nextMove))
+    return None
 
-    util.raiseNotDefined()
-
-
-def uniformCostSearch(problem):  # still need to update with priority
+def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
     frontier = util.PriorityQueue()
-    # intialized with cumulative cost and cost of next step
     frontier.push((problem.getStartState(), [], 0), 0)
     visited = set()
     while not frontier.isEmpty():
-        # returns the current coordinates and accumulated path of pacman
         currState, currPath, currCost = frontier.pop()
-        print("State: ", currState)
-        print("Path: ", currPath)
         if problem.isGoalState(currState):
-            print("Finished?", problem.isGoalState(
-                currState))  # checks current state
             return currPath
-        visited.add(currState)
-        for item, move, stepCost in problem.getSuccessors(currState):
-            if item not in visited:  # avoids circular path
-                nextMove = currPath+[move]
-                nextCost = currCost + stepCost
-                # update curr state & accumulated path
-                frontier.push((item, nextMove, nextCost), nextCost)
-
-    util.raiseNotDefined()
-
+        
+        if currState not in visited:
+            visited.add(currState)
+            children = problem.getSuccessors(currState)
+            for next, move, stepCost in children:
+                if next not in visited:
+                    nextMove = currPath +[move]
+                    nextCost = currCost + stepCost
+                    frontier.push((next, nextMove, nextCost), nextCost)
+    return None
 
 def nullHeuristic(state, problem=None):
     """
     A heuristic function estimates the cost from the current state to the nearest
     goal in the provided SearchProblem.  This heuristic is trivial.
     """
-    PQueue = util.PriorityQueue()
-    frontier = util.PriorityQueueWithFunction(PQueue)
-    # intialized with cumulative cost and cost of next step
-    frontier.push((problem.getStartState(), [], 0), 0)
-    visited = set()
-    while not frontier.isEmpty():
-        # returns the current coordinates and accumulated path of pacman
-        currState, currPath, currCost = frontier.pop()
-        print("State: ", currState)
-        print("Path: ", currPath)
-        if problem.isGoalState(currState):
-            print("Finished?", problem.isGoalState(
-                currState))  # checks current state
-            return currPath
-        visited.add(currState)
-        for item, move, stepCost in problem.getSuccessors(currState):
-            if item not in visited:  # avoids circular path
-                nextMove = currPath+[move]
-                nextCost = currCost + stepCost
-                # update curr state & accumulated path
-                frontier.push((item, nextMove, nextCost), nextCost)
     return 0
-
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    frontier = util.PriorityQueue()
+    frontier.push((problem.getStartState(), [], 0), 0)
+    visited = []
+    while not frontier.isEmpty():
+        currState, currPath, currCost = frontier.pop()
+        if problem.isGoalState(currState):
+            return currPath
+        
+        if currState not in visited:
+            visited.append(currState)
+            children = problem.getSuccessors(currState)
+            for next, move, stepCost in children:
+                if next not in visited:
+                    nextMove = currPath +[move]
+                    newCost = stepCost + currCost
+                    f = newCost + heuristic(next, problem)
+                    frontier.push([next, nextMove, newCost], f)
+    return None
+
 
 
 # Abbreviations
