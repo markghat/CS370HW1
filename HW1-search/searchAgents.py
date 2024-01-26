@@ -411,13 +411,13 @@ def cornersHeuristic(state, problem):
     "*** YOUR CODE HERE ***"
     xy = state[0]
     h = 0
-    corners = list(corners).copy()
-    while corners:
+    cornersList = list(corners).copy()
+    while cornersList:
         dist, corner = min(
-            [(util.manhattanDistance(xy, corner), corner) for corner in corners])
+            [(util.manhattanDistance(xy, corner), corner) for corner in cornersList])
         xy = corner
         h += dist
-        corners.remove(xy)
+        cornersList.remove(xy)
         return h
     return 0
 
