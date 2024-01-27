@@ -411,15 +411,15 @@ def cornersHeuristic(state, problem):
     "*** YOUR CODE HERE ***"
     xy = state[0]
     h = 0
-    cornersList = list(corners).copy()
+    cornersList = [corner for corner in corners if corner not in state[1]]
     while cornersList:
         dist, corner = min(
             [(util.manhattanDistance(xy, corner), corner) for corner in cornersList])
         xy = corner
         h += dist
-        cornersList.remove(xy)
-        return h
-    return 0
+        cornersList.remove(corner)
+
+    return h
 
 
 class AStarCornersAgent(SearchAgent):
@@ -523,6 +523,7 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
+
     return 0
 
 
