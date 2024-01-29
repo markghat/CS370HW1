@@ -523,8 +523,12 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-
-    return 0
+    foodCoords = foodGrid.asList()
+    if len(foodCoords) == 0:
+        return 0
+    dist = max(
+        [util.manhattanDistance(position, coords) for coords in foodCoords])
+    return dist
 
 
 class ClosestDotSearchAgent(SearchAgent):
